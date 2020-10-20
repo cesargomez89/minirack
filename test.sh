@@ -5,6 +5,13 @@ curl -i \
   http://localhost:9292/test
 echo "==============="
 
+echo "==== 405 ===="
+curl -i \
+  -H "Content-Type: application/html" \
+  -X GET -d '{"name":"cesar", "email":"cesar.gomez@michelada.io"}' \
+  http://localhost:9292/test
+echo "==============="
+
 echo "==== 400 ===="
 curl -i \
   -H "Content-Type: application/html" \

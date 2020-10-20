@@ -6,7 +6,7 @@ class Traguito
   }
 
   ROUTES = {
-    '/' => :index
+    '/' => { handler: :index, method: 'GET' }
   }
 
   attr_reader :env, :request, :params
@@ -16,7 +16,8 @@ class Traguito
     @request = Rack::Request.new(env)
     @params  = ParamsParser.new(@request.body.read)
 
-    send self.class::ROUTES[env['REQUEST_PATH']]
+    return invalid_method unless route[:method] == env['REQUEST_METHOD']
+    send route[:handler]
   end
 
   def index
@@ -34,7 +35,15 @@ class Traguito
 
   private
 
+  def route
+    @route ||= self.class::ROUTES[env['REQUEST_PATH']]
+  end
+
   def invalid_format
     render :json, { error: "invalid format: #{env['HTTP_ACCEPT']}" }, status: '400'
+  end
+
+  def invalid_method
+    render :json, { error: "invalid method: #{env['REQUEST_METHOD']}" }, status: '405'
   end
 end

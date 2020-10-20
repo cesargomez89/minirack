@@ -4,7 +4,7 @@ require 'byebug'
 
 class App < Traguito
   ROUTES = {
-    '/test' => :test
+    '/test' => { handler: :test, method: 'POST' }
   }
 
   def test
